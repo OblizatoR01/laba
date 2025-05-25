@@ -1,30 +1,16 @@
-#pragma once
+// bank_operations.h
 #ifndef BANK_OPERATIONS_H
-#define BANK_OPETATIONS_H
+#define BANK_OPERATIONS_H
 
-#include "constants.h"
+#include <string>
 
-struct dates
-{
-    int day;
-    int month;
-    int year;
+struct BankOperation {
+    std::string date;        // дата в формате dd.mm.yy
+    std::string time;        // время в формате hh:mm:ss
+    std::string type;        // вид операции (приход/расход)
+    std::string account;     // номер счёта
+    double amount = 0.0;     // сумма операции (инициализация по умолчанию)
+    std::string description; // назначение платежа
 };
 
-struct person
-{
-    char first_name[MAX_STRING_SIZE];
-    char middle_name[MAX_STRING_SIZE];
-    char last_name[MAX_STRING_SIZE];
-};
-
-struct bank_operations
-{
-    person reader;
-    date start;
-    date finish;
-    person author;
-    char title[MAX_STRING_SIZE];
-};
-
-#endif
+#endif // BANK_OPERATIONS_H

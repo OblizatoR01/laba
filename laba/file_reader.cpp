@@ -1,50 +1,29 @@
+// file_reader.cpp
 #include "file_reader.h"
-#include "constants.h"
-
 #include <fstream>
-#include <cstring>
+#include <sstream>
+#include <vector>
 
-date convert(char* str)
-{
-    date result;
-    char* context = NULL;
-    char* str_number = strtok_s(str, ".", &context);
-    result.day = atoi(str_number);
-    str_number = strtok_s(NULL, ".", &context);
-    result.month = atoi(str_number);
-    str_number = strtok_s(NULL, ".", &context);
-    result.year = atoi(str_number);
-    return result;
-}
+std::vector<BankOperation> readBankOperations(const std::string& filename) {
+    std::vector<BankOperation> operations;
+    std::ifstream file(filename);
+    if (!file.is_open()) {
+        throw std::runtime_error("Cannot open file: " + filename);
+    }
 
-void read(const char* file_name, book_subscription* array[], int& size)
-{
-    std::ifstream file(file_name);
-    if (file.is_open())
-    {
-        size = 0;
-        char tmp_buffer[MAX_STRING_SIZE];
-        while (!file.eof())
-        {
-            book_subscription* item = new book_subscription;
-            file >> item->reader.last_name;
-            file >> item->reader.first_name;
-            file >> item->reader.middle_name;
-            file >> tmp_buffer;
-            item->start = convert(tmp_buffer);
-            file >> tmp_buffer;
-            item->finish = convert(tmp_buffer);
-            file >> item->author.last_name;
-            file >> item->author.first_name;
-            file >> item->author.middle_name;
-            file.read(tmp_buffer, 1); // чтения лишнего символа пробела
-            file.getline(item->title, MAX_STRING_SIZE);
-            array[size++] = item;
+    std::string line;
+    while (std::getline(file, line)) {
+        std::istringstream iss(line);
+        BankOperation op;
+
+        // Разбиваем строку на части
+        if (!(iss >> op.date >> op.time >> op.type >> op.account >> op.amount >> op.description)) {
+            continue; // Пропускаем некорректные строки
         }
-        file.close();
+
+        operations.push_back(op);
     }
-    else
-    {
-        throw "Ошибка открытия файла";
-    }
+
+    file.close();
+    return operations;
 }

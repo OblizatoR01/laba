@@ -1,8 +1,12 @@
+// file_reader.h
 #ifndef FILE_READER_H
 #define FILE_READER_H
 
 #include "bank_operations.h"
+#include <string>
+#include <vector>
 
-void read(const char* file_name, bank_operations* array[], int& size);
+// Функция для чтения банковских операций из файла
+std::vector<BankOperation> readBankOperations(const std::string& filename);
 
-#endif
+#endif // FILE_READER_H
